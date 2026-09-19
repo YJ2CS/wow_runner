@@ -1,0 +1,11 @@
+bin/
+obj/
+publish/
+.vs/
+installer/staging/
+installer/dist/
+installer/WowRunner-Setup.sed
+.omp/
+*.user
+*.suo
+appsettings.local.json
