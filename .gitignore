@@ -5,6 +5,7 @@ publish/
 installer/staging/
 installer/dist/
 installer/WowRunner-Setup.sed
+installer/payload.zip
 .omp/
 *.user
 *.suo

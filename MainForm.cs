@@ -570,6 +570,8 @@ public sealed class MainForm : Form
         }
 
         name = currentName;
+        var profile = ConfigurationStore.FindProfile(_configuration, name)
+            ?? throw new InvalidOperationException("找不到当前 profile。");
         var shortcutName = $"WowRunner - {name}.lnk";
         var desktop = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
         var shortcutPath = Path.Combine(desktop, shortcutName);
@@ -578,6 +580,9 @@ public sealed class MainForm : Form
         dynamic shell = Activator.CreateInstance(shellType)!;
         dynamic shortcut = shell.CreateShortcut(shortcutPath);
         shortcut.TargetPath = Environment.ProcessPath;
+        shortcut.IconLocation = File.Exists(profile.ExecutablePath)
+            ? $"{profile.ExecutablePath},0"
+            : $"{Environment.ProcessPath},0";
         shortcut.Arguments = $"run {QuoteForCommandLine(name)}";
         shortcut.WorkingDirectory = AppContext.BaseDirectory;
         shortcut.Description = $"以 profile '{name}' 启动配置的程序";
