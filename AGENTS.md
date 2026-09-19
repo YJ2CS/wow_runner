@@ -2,7 +2,7 @@
 
 ## Project scope
 
-WowRunner is a Windows-only .NET 8 WinForms application for launching a configured executable under a selected Windows user. The application also keeps the original CLI entry points for shortcuts, automation, credential management, and local account initialization.
+WowRunner is the internal project name for the Windows-only .NET 8 WinForms product **暴雪战网启动配置管理器**. It launches a configured executable under a selected Windows user.
 
 Target runtime and architecture:
 

@@ -382,7 +382,7 @@ internal static class Program
     /// <returns>命令退出码。</returns>
     private static int PrintHelp()
     {
-        Console.WriteLine("WowRunner - 使用独立 Windows 用户启动配置中的程序");
+        Console.WriteLine("暴雪战网启动配置管理器");
         Console.WriteLine();
         Console.WriteLine("用法：");
         Console.WriteLine("  WowRunner.exe                         运行默认 profile");

@@ -23,7 +23,7 @@ public sealed class InstallerForm : Form
     /// </summary>
     public InstallerForm()
     {
-        Text = "WowRunner 安装程序";
+        Text = "暴雪战网启动配置管理器安装程序";
         Font = new Font("Microsoft YaHei UI", 9F);
         StartPosition = FormStartPosition.CenterScreen;
         FormBorderStyle = FormBorderStyle.FixedDialog;
@@ -55,7 +55,7 @@ public sealed class InstallerForm : Form
         };
         root.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 120));
         root.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
-        root.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 90));
+        root.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 130));
         root.RowStyles.Add(new RowStyle(SizeType.Absolute, 52));
         root.RowStyles.Add(new RowStyle(SizeType.Absolute, 46));
         root.RowStyles.Add(new RowStyle(SizeType.Absolute, 38));
@@ -67,7 +67,7 @@ public sealed class InstallerForm : Form
 
         var title = new Label
         {
-            Text = "安装 WowRunner 配置管理器",
+            Text = "安装暴雪战网启动配置管理器",
             Dock = DockStyle.Fill,
             Font = new Font(SystemFonts.DefaultFont.FontFamily, 16F, FontStyle.Bold),
             TextAlign = ContentAlignment.MiddleLeft
@@ -106,6 +106,7 @@ public sealed class InstallerForm : Form
         root.Controls.Add(_statusLabel, 1, 6);
 
         _installButton.Text = "开始安装";
+        _installButton.Font = new Font(SystemFonts.DefaultFont.FontFamily, 10F, FontStyle.Regular);
         _installButton.Dock = DockStyle.Fill;
         _installButton.Click += InstallButton_Click;
         root.Controls.Add(_installButton, 2, 6);
@@ -236,14 +237,14 @@ public sealed class InstallerForm : Form
             progress.Report("正在创建快捷方式……");
             if (options.CreateDesktopShortcut)
             {
-                CreateShortcut(executablePath, Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory), "WowRunner.lnk"), options.InstallPath);
+                CreateShortcut(executablePath, Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory), "暴雪战网启动配置管理器.lnk"), options.InstallPath);
             }
 
             if (options.CreateStartMenuShortcut)
             {
                 var startMenu = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Microsoft", "Windows", "Start Menu", "Programs");
                 Directory.CreateDirectory(startMenu);
-                CreateShortcut(executablePath, Path.Combine(startMenu, "WowRunner.lnk"), options.InstallPath);
+                CreateShortcut(executablePath, Path.Combine(startMenu, "暴雪战网启动配置管理器.lnk"), options.InstallPath);
             }
 
             return executablePath;
@@ -275,7 +276,7 @@ public sealed class InstallerForm : Form
         dynamic shortcut = shell.CreateShortcut(shortcutPath);
         shortcut.TargetPath = targetPath;
         shortcut.WorkingDirectory = workingDirectory;
-        shortcut.Description = "WowRunner 配置管理器";
+        shortcut.Description = "暴雪战网启动配置管理器";
         shortcut.Save();
     }
 

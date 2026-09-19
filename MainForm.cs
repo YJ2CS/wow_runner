@@ -43,7 +43,7 @@ public sealed class MainForm : Form
         _configuration = configuration;
 
         AutoScaleMode = AutoScaleMode.Dpi;
-        Text = "WowRunner 配置管理器";
+        Text = "暴雪战网启动配置管理器";
         StartPosition = FormStartPosition.CenterScreen;
         MinimumSize = new Size(1100, 700);
         Size = new Size(1220, 780);
@@ -129,11 +129,11 @@ public sealed class MainForm : Form
         var launchButton = new Button { Text = "启动当前配置", Dock = DockStyle.Fill, Font = new Font(SystemFonts.DefaultFont.FontFamily, 10F) };
         _toolTip.SetToolTip(launchButton, "使用当前选中的 profile、保存的 Windows 凭据和参数启动目标程序。");
         launchButton.Click += (_, _) => LaunchSelectedProfile();
-        editor.Controls.Add(launchButton, 1, 0);
+        editor.Controls.Add(launchButton, 2, 0);
         var shortcutButton = new Button { Text = "创建桌面快捷方式", Dock = DockStyle.Fill, Font = new Font(SystemFonts.DefaultFont.FontFamily, 10F) };
         _toolTip.SetToolTip(shortcutButton, "在桌面创建一个只启动当前 profile 的快捷方式；不同 profile 可以创建多个快捷方式。");
         shortcutButton.Click += (_, _) => CreateShortcut();
-        editor.Controls.Add(shortcutButton, 2, 0);
+        editor.Controls.Add(shortcutButton, 1, 0);
 
         var saveButton = new Button { Text = "保存用户配置", Dock = DockStyle.Fill, Font = new Font(SystemFonts.DefaultFont.FontFamily, 10F) };
         _toolTip.SetToolTip(saveButton, "保存路径、用户名、工作目录和参数；如果填写了密码，也会同时覆盖保存凭据。");
@@ -578,7 +578,7 @@ public sealed class MainForm : Form
             StringComparison.OrdinalIgnoreCase);
         var shortcutLabel = isBattleNet
             ? $"暴雪战网 - {name}"
-            : $"WowRunner - {name}";
+            : $"暴雪战网启动配置管理器 - {name}";
         var shortcutName = $"{shortcutLabel}.lnk";
         var desktop = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
         var shortcutPath = Path.Combine(desktop, shortcutName);
