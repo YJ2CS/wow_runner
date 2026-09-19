@@ -115,7 +115,7 @@ public sealed class MainForm : Form
             RowCount = 10,
             AutoScroll = true
         };
-        editor.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 130));
+        editor.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 160));
         editor.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
         editor.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 210));
         for (var row = 0; row < editor.RowCount; row++)
@@ -346,7 +346,7 @@ public sealed class MainForm : Form
         _configuration.Profiles.Add(new LaunchProfile
         {
             Name = name,
-            WindowsUser = "wow",
+            WindowsUser = name,
             ExecutablePath = @"C:\Program Files (x86)\Battle.net\Battle.net Launcher.exe",
             WorkingDirectory = @"C:\Program Files (x86)\Battle.net",
             Arguments = ["--setregion=US", "--setlanguage=enCN"]
