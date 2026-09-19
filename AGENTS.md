@@ -92,9 +92,34 @@ pwsh.exe -NoLogo -File installer/build-installer.ps1
   - `installer/dist/WowRunner-Setup.exe`
 
 - `version.json` stores the current semantic version. Normal builds keep the version unchanged; formal release builds increment the patch number automatically.
-- Formal release command: `pwsh.exe -NoLogo -File installer/build-installer.ps1 -Release`. For example, `1.0.0` becomes `1.0.1`; the value is written back to `version.json` and embedded into both application and installer metadata.
+## GitHub Release 发布流程
 
-After source changes, run the smallest affected build first, then publish the final EXE and run:
+正式发布使用补丁版本递增：
+
+1. 确认工作区干净且远程 `master` 已同步。
+2. 执行 `pwsh.exe -NoLogo -File installer/build-installer.ps1 -Release`，该命令递增 `version.json` 的 patch 版本并生成安装包。
+3. 提交版本变更，例如 `chore: bump release version to 1.0.2`。
+4. 创建并推送标签：`git tag -a v1.0.2 -m "Release v1.0.2"`，然后推送 `master` 和标签。
+5. 创建 GitHub Release 并上传安装包：
+
+```text
+gh release create v1.0.2 installer/dist/WowRunner-Setup.exe --title "暴雪战网启动配置管理器 v1.0.2" --notes-file <release-notes.md>
+```
+
+6. 上传教程等辅助资产：
+
+```text
+gh release upload v1.0.2 "docs/tutorial/暴雪战网启动配置管理器使用教程.docx" --clobber
+```
+
+7. 用 `gh release view v1.0.2 --json assets,url` 核对 Release、安装包和教程资产，并用本地 SHA256 与 GitHub asset digest 对比。
+
+每次正式发布的 Release 资产至少包含：
+
+- `WowRunner-Setup.exe`
+- `暴雪战网启动配置管理器使用教程.docx`
+
+
 
 ```text
 WowRunner.exe help
