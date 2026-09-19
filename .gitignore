@@ -10,3 +10,4 @@ installer/payload.zip
 *.user
 *.suo
 appsettings.local.json
+~$*.docx
