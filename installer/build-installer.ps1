@@ -3,11 +3,34 @@
 [CmdletBinding()]
 param(
     [ValidateSet('Debug', 'Release')]
-    [string]$Configuration = 'Release'
+    [string]$Configuration = 'Release',
+    [switch]$Release
 )
 
 $ErrorActionPreference = 'Stop'
 $root = [System.IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..'))
+$versionPath = Join-Path $root 'version.json'
+$versionDocument = Get-Content -LiteralPath $versionPath -Raw | ConvertFrom-Json
+$version = [string]$versionDocument.version
+$versionParts = $version.Split('.')
+$hasInvalidVersion = $versionParts.Count -ne 3
+foreach ($part in $versionParts) {
+    if ($part -notmatch '^[0-9]+$') {
+        $hasInvalidVersion = $true
+    }
+}
+if ($hasInvalidVersion) {
+    throw "version.json 中的版本号无效：$version"
+}
+
+if ($Release) {
+    $Configuration = 'Release'
+    $nextPatch = ([int]$versionParts[2]) + 1
+    $version = "$($versionParts[0]).$($versionParts[1]).$nextPatch"
+    $versionDocument.version = $version
+    $utf8NoBom = [System.Text.UTF8Encoding]::new($false)
+    [System.IO.File]::WriteAllText($versionPath, (($versionDocument | ConvertTo-Json) + [Environment]::NewLine), $utf8NoBom)
+}
 $staging = Join-Path $PSScriptRoot 'staging'
 $dist = Join-Path $PSScriptRoot 'dist'
 $payload = Join-Path $PSScriptRoot 'payload.zip'
@@ -24,7 +47,8 @@ $publishArguments = @(
     '--configuration', $Configuration,
     '--runtime', 'win-x64',
     '--self-contained', 'true',
-    '--output', $staging
+    '--output', $staging,
+    "-p:AppVersion=$version"
 )
 & dotnet @publishArguments
 if ($LASTEXITCODE -ne 0) {
@@ -39,7 +63,8 @@ $setupArguments = @(
     '--runtime', 'win-x64',
     '--self-contained', 'true',
     '--output', $dist,
-    "-p:PayloadPath=$payload"
+    "-p:PayloadPath=$payload",
+    "-p:AppVersion=$version"
 )
 & dotnet @setupArguments
 if ($LASTEXITCODE -ne 0) {
@@ -51,4 +76,5 @@ if (-not (Test-Path -LiteralPath $target -PathType Leaf)) {
 }
 
 Remove-Item -LiteralPath $payload -Force -ErrorAction SilentlyContinue
+Write-Output "版本：$version"
 Write-Output "安装包已生成：$target"

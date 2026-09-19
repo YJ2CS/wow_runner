@@ -10,6 +10,12 @@
     <RootNamespace>WowRunner.Setup</RootNamespace>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <ApplicationIcon>../Assets/wowrunner.ico</ApplicationIcon>
+    <AppVersion Condition="'$(AppVersion)' == ''">1.0.0</AppVersion>
+    <VersionPrefix>$(AppVersion)</VersionPrefix>
+    <Version>$(AppVersion)</Version>
+    <AssemblyVersion>$(AppVersion)</AssemblyVersion>
+    <FileVersion>$(AppVersion)</FileVersion>
+    <InformationalVersion>$(AppVersion)</InformationalVersion>
     <PublishSingleFile>true</PublishSingleFile>
     <SelfContained>true</SelfContained>
     <RuntimeIdentifier>win-x64</RuntimeIdentifier>

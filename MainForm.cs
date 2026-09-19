@@ -43,7 +43,7 @@ public sealed class MainForm : Form
         _configuration = configuration;
 
         AutoScaleMode = AutoScaleMode.Dpi;
-        Text = "暴雪战网启动配置管理器";
+        Text = $"暴雪战网启动配置管理器 v{Application.ProductVersion}";
         StartPosition = FormStartPosition.CenterScreen;
         MinimumSize = new Size(1100, 600);
         Size = new Size(1220, 620);
@@ -230,16 +230,25 @@ public sealed class MainForm : Form
         {
             if (directory)
             {
-                using var dialog = new FolderBrowserDialog();
-                if (dialog.ShowDialog() == DialogResult.OK)
+                using var dialog = new FolderBrowserDialog
+                {
+                    SelectedPath = Directory.Exists(target.Text) ? target.Text : AppContext.BaseDirectory
+                };
+                if (dialog.ShowDialog(this) == DialogResult.OK)
                 {
                     target.Text = dialog.SelectedPath;
                 }
             }
             else
             {
-                using var dialog = new OpenFileDialog { Filter = "可执行文件 (*.exe)|*.exe|所有文件 (*.*)|*.*" };
-                if (dialog.ShowDialog() == DialogResult.OK)
+                var initialDirectory = Path.GetDirectoryName(target.Text.Trim());
+                using var dialog = new OpenFileDialog
+                {
+                    Filter = "可执行文件 (*.exe)|*.exe|所有文件 (*.*)|*.*",
+                    RestoreDirectory = true,
+                    InitialDirectory = Directory.Exists(initialDirectory) ? initialDirectory : AppContext.BaseDirectory
+                };
+                if (dialog.ShowDialog(this) == DialogResult.OK)
                 {
                     target.Text = dialog.FileName;
                     UpdateWorkingDirectoryFromExecutable(dialog.FileName);

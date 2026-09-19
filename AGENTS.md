@@ -87,10 +87,12 @@ dotnet publish --configuration Release --runtime win-x64 --self-contained true -
 pwsh.exe -NoLogo -File installer/build-installer.ps1
 ```
 
-Expected artifacts:
+- Expected artifacts:
+  - `publish/WowRunner.exe`
+  - `installer/dist/WowRunner-Setup.exe`
 
-- `publish/WowRunner.exe`
-- `installer/dist/WowRunner-Setup.exe`
+- `version.json` stores the current semantic version. Normal builds keep the version unchanged; formal release builds increment the patch number automatically.
+- Formal release command: `pwsh.exe -NoLogo -File installer/build-installer.ps1 -Release`. For example, `1.0.0` becomes `1.0.1`; the value is written back to `version.json` and embedded into both application and installer metadata.
 
 After source changes, run the smallest affected build first, then publish the final EXE and run:
 

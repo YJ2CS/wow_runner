@@ -23,7 +23,7 @@ public sealed class InstallerForm : Form
     /// </summary>
     public InstallerForm()
     {
-        Text = "暴雪战网启动配置管理器安装程序";
+        Text = $"暴雪战网启动配置管理器安装程序 v{Application.ProductVersion}";
         Font = new Font("Microsoft YaHei UI", 9F);
         StartPosition = FormStartPosition.CenterScreen;
         FormBorderStyle = FormBorderStyle.FixedDialog;
@@ -67,7 +67,7 @@ public sealed class InstallerForm : Form
 
         var title = new Label
         {
-            Text = "安装暴雪战网启动配置管理器",
+            Text = $"安装暴雪战网启动配置管理器 v{Application.ProductVersion}",
             Dock = DockStyle.Fill,
             Font = new Font(SystemFonts.DefaultFont.FontFamily, 16F, FontStyle.Bold),
             TextAlign = ContentAlignment.MiddleLeft
