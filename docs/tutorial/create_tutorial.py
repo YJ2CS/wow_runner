@@ -128,7 +128,19 @@ def add_callout(document: Document, title: str, text: str, fill: str = LIGHT_BLU
     return table
 
 
-def add_screenshot_placeholder(document: Document, number: int, title: str, note: str):
+def add_screenshot_placeholder(document: Document, number: int, title: str, note: str, image_path: str | None = None):
+    if image_path and Path(image_path).exists():
+        paragraph = document.add_paragraph()
+        paragraph.alignment = WD_ALIGN_PARAGRAPH.CENTER
+        paragraph.paragraph_format.space_after = Pt(3)
+        run = paragraph.add_run()
+        run.add_picture(image_path, width=Inches(6.25))
+        caption = document.add_paragraph()
+        caption.alignment = WD_ALIGN_PARAGRAPH.CENTER
+        caption.paragraph_format.space_after = Pt(6)
+        add_run(caption, f"图 {number}：{title}", bold=True, color=NAVY, size=9.5)
+        return paragraph
+
     table = document.add_table(rows=1, cols=1)
     table.alignment = WD_TABLE_ALIGNMENT.CENTER
     table.autofit = False
@@ -265,9 +277,9 @@ def build_document() -> None:
     add_run(code, r"D:\code\wow_runner\installer\dist\WowRunner-Setup.exe", bold=True, color=NAVY, size=10.5)
     add_number(document, "安装窗口打开后，确认安装位置。默认位置通常是当前用户的本地程序目录。")
     add_number(document, "勾选需要的选项，点击“开始安装”。")
-    add_screenshot_placeholder(document, 1, "安装器主界面", "请插入安装器窗口截图，并用红框标出“开始安装”按钮。")
+    add_screenshot_placeholder(document, 1, "安装器主界面", "请插入安装器窗口截图，并用红框标出“开始安装”按钮。", "docs/tutorial/WowRunner-Setup_ANiJu0DRVn.png")
     add_number(document, "安装完成后，若勾选了“安装完成后启动配置管理器”，程序会自动打开配置管理器。")
-    add_screenshot_placeholder(document, 2, "安装完成后自动打开配置管理器", "请插入配置管理器首次打开的截图。")
+    add_screenshot_placeholder(document, 2, "安装完成后自动打开配置管理器", "请插入配置管理器首次打开的截图。", "docs/tutorial/WowRunner_1ECyc5pHZ8.png")
 
     add_heading(document, "三、修改 Battle.net Launcher.exe 路径", 1)
     add_body_paragraph(document, "配置器左侧是用户配置列表，右侧是当前选中配置的详细内容。先选择左侧的“wow”配置。")
@@ -280,7 +292,7 @@ def build_document() -> None:
     workdir = document.add_paragraph()
     workdir.paragraph_format.left_indent = Cm(0.8)
     add_run(workdir, r"C:\Program Files (x86)\Battle.net", color=NAVY, size=10.5)
-    add_screenshot_placeholder(document, 3, "修改程序路径", "请插入配置器截图，并用红框圈出“程序路径”输入框和“浏览”按钮。")
+    add_screenshot_placeholder(document, 3, "修改程序路径", "请插入配置器截图，并用红框圈出“程序路径”输入框和“浏览”按钮。", "docs/tutorial/WowRunner_1THewb1glJ.png")
 
     add_heading(document, "四、输入密码并保存用户配置", 1)
     add_body_paragraph(document, "在“密码（可选）”输入框中输入目标 Windows 用户的密码。教程示例可以使用：")
@@ -294,7 +306,7 @@ def build_document() -> None:
     add_bullet(document, "如果密码框有内容，会覆盖保存该 profile 的旧凭据。")
     add_bullet(document, "密码不会写入 appsettings.json，而是保存到当前 Windows 用户的 Credential Manager。")
     add_callout(document, "覆盖密码说明", "如果之前已经保存过凭据，再输入新密码并点击“保存用户配置”，旧凭据会被新密码覆盖。如果密码框留空，则不会清空原来的凭据。", fill="E2F0D9", color="548235")
-    add_screenshot_placeholder(document, 4, "输入密码并保存用户配置", "请插入配置器截图，用红框分别标出密码输入框和“保存用户配置”按钮。")
+    add_screenshot_placeholder(document, 4, "输入密码并保存用户配置", "请插入配置器截图，用红框分别标出密码输入框和“保存用户配置”按钮。", "docs/tutorial/WowRunner_zEVJV0GtTW.png")
 
     add_heading(document, "五、初始化 Windows 用户", 1)
     add_body_paragraph(document, "保存用户配置后，点击“初始化 Windows 账号”。程序会请求管理员权限，并根据当前 profile 创建本机 Windows 用户。")
@@ -302,8 +314,8 @@ def build_document() -> None:
     add_bullet(document, "通常情况下，初始化过程会直接使用刚才保存到 Credential Manager 的密码，不需要再次输入。")
     add_bullet(document, "如果 UAC 中切换成了另一个管理员账号，该管理员身份可能无法读取原用户的 Credential Manager。此时程序会再次弹出密码窗口，请输入同一个 Windows 用户密码。")
     add_bullet(document, "初始化只支持本机 Windows 用户，不支持域账号。")
-    add_screenshot_placeholder(document, 5, "初始化 Windows 账号按钮", "请插入配置器截图，用红框标出“初始化 Windows 账号”按钮。")
-    add_screenshot_placeholder(document, 6, "管理员权限确认或密码输入窗口", "请插入 UAC 或密码输入窗口截图。若系统没有再次询问密码，可将此处替换为“使用已保存凭据完成初始化”的截图。")
+    add_screenshot_placeholder(document, 5, "初始化 Windows 账号按钮", "请插入配置器截图，用红框标出“初始化 Windows 账号”按钮。", "docs/tutorial/WowRunner_1ECyc5pHZ8.png")
+    add_screenshot_placeholder(document, 6, "管理员权限确认或密码输入窗口", "请插入 UAC 或密码输入窗口截图。若系统没有再次询问密码，可将此处替换为“使用已保存凭据完成初始化”的截图。", "docs/tutorial/WowRunner_pTz5CTAKZ0.png")
     add_callout(document, "本步骤的明确结论", "优先使用你在配置器中保存的密码；只有在 UAC 切换到其他管理员身份、无法读取原凭据时，才需要再次输入密码。", fill="E2F0D9", color="548235")
 
     add_heading(document, "六、创建桌面快捷方式", 1)
@@ -312,15 +324,15 @@ def build_document() -> None:
     add_bullet(document, "快捷方式会使用 Battle.net Launcher.exe 自己的图标。")
     add_bullet(document, "快捷方式会记住当前 profile 对应的 Windows 用户、参数和路径。")
     add_bullet(document, "不同 profile 可以创建多个快捷方式。")
-    add_screenshot_placeholder(document, 7, "创建桌面快捷方式按钮", "请插入配置器截图，用红框标出“创建桌面快捷方式”按钮。")
-    add_screenshot_placeholder(document, 8, "桌面上的快捷方式", "请插入桌面截图，用红框标出新生成的“暴雪战网 - 用户配置名”快捷方式。")
+    add_screenshot_placeholder(document, 7, "创建桌面快捷方式按钮", "请插入配置器截图，用红框标出“创建桌面快捷方式”按钮。", "docs/tutorial/annotated/WowRunner_annotated.png")
+    add_screenshot_placeholder(document, 8, "桌面上的快捷方式", "请插入桌面截图，用红框标出新生成的“暴雪战网 - 用户配置名”快捷方式。", "docs/tutorial/explorer_3mPMngZQMB.png")
 
     add_heading(document, "七、启动当前配置", 1)
     add_body_paragraph(document, "有两种启动方式：")
     add_bullet(document, "回到配置管理器，点击“启动当前配置”。")
     add_bullet(document, "双击桌面上对应 profile 的快捷方式。")
     add_body_paragraph(document, "如果同时运行了其他 Battle.net 或 Agent 进程，Battle.net 可能会复用已有会话。测试不同 Windows 用户时，建议先关闭已有的 Battle.net、Agent 和 WoW 进程。")
-    add_screenshot_placeholder(document, 9, "启动当前配置", "请插入点击“启动当前配置”后的截图，或插入 Battle.net 启动成功截图。")
+    add_screenshot_placeholder(document, 9, "Battle.net 目标程序图标", "请插入目标程序图标截图，说明快捷方式会优先使用 Battle.net Launcher.exe 的图标。", "docs/tutorial/Battle.net_1Kr1c2R2NE.png")
 
     add_heading(document, "八、常见问题", 1)
     faq = [
