@@ -45,8 +45,8 @@ public sealed class MainForm : Form
         AutoScaleMode = AutoScaleMode.Dpi;
         Text = "暴雪战网启动配置管理器";
         StartPosition = FormStartPosition.CenterScreen;
-        MinimumSize = new Size(1100, 700);
-        Size = new Size(1220, 780);
+        MinimumSize = new Size(1100, 600);
+        Size = new Size(1220, 620);
 
         BuildLayout();
         ReloadProfiles();
