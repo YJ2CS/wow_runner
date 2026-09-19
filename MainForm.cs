@@ -572,7 +572,14 @@ public sealed class MainForm : Form
         name = currentName;
         var profile = ConfigurationStore.FindProfile(_configuration, name)
             ?? throw new InvalidOperationException("找不到当前 profile。");
-        var shortcutName = $"WowRunner - {name}.lnk";
+        var isBattleNet = string.Equals(
+            Path.GetFileName(profile.ExecutablePath),
+            "Battle.net Launcher.exe",
+            StringComparison.OrdinalIgnoreCase);
+        var shortcutLabel = isBattleNet
+            ? $"暴雪战网 - {name}"
+            : $"WowRunner - {name}";
+        var shortcutName = $"{shortcutLabel}.lnk";
         var desktop = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
         var shortcutPath = Path.Combine(desktop, shortcutName);
         var shellType = Type.GetTypeFromProgID("WScript.Shell")

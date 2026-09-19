@@ -1,6 +1,5 @@
 using System.ComponentModel;
 using System.Security;
-using System.Text;
 using System.Text.Json;
 using WowRunner.Models;
 using WowRunner.Services;
@@ -21,7 +20,6 @@ internal static class Program
     /// <returns>进程退出码。</returns>
     private static int Main(string[] args)
     {
-        Console.OutputEncoding = Encoding.UTF8;
         var userArguments = args
             .Where(argument => !string.Equals(argument, ElevatedArgument, StringComparison.OrdinalIgnoreCase))
             .ToArray();
