@@ -232,6 +232,9 @@ public sealed class MainForm : Form
             {
                 using var dialog = new FolderBrowserDialog
                 {
+                    Description = "选择目标程序工作目录",
+                    AutoUpgradeEnabled = false,
+                    ShowNewFolderButton = true,
                     SelectedPath = Directory.Exists(target.Text) ? target.Text : AppContext.BaseDirectory
                 };
                 if (dialog.ShowDialog(this) == DialogResult.OK)
@@ -245,6 +248,8 @@ public sealed class MainForm : Form
                 using var dialog = new OpenFileDialog
                 {
                     Filter = "可执行文件 (*.exe)|*.exe|所有文件 (*.*)|*.*",
+                    Title = "选择目标程序",
+                    AutoUpgradeEnabled = false,
                     RestoreDirectory = true,
                     InitialDirectory = Directory.Exists(initialDirectory) ? initialDirectory : AppContext.BaseDirectory
                 };
