@@ -17,12 +17,14 @@ public sealed class AccountDeletionConfirmationForm : Form
     /// <param name="windowsUser">将被删除的 Windows 用户。</param>
     private AccountDeletionConfirmationForm(string profileName, string windowsUser)
     {
+        AutoScaleMode = AutoScaleMode.Dpi;
         Text = "确认删除 Windows 账号";
         StartPosition = FormStartPosition.CenterParent;
         FormBorderStyle = FormBorderStyle.FixedDialog;
         MinimizeBox = false;
         MaximizeBox = false;
-        ClientSize = new Size(480, 190);
+        MinimumSize = new Size(620, 250);
+        ClientSize = new Size(620, 250);
 
         var layout = new TableLayoutPanel
         {
@@ -31,19 +33,21 @@ public sealed class AccountDeletionConfirmationForm : Form
             ColumnCount = 1,
             RowCount = 4
         };
-        layout.RowStyles.Add(new RowStyle(SizeType.Absolute, 48));
+        layout.RowStyles.Add(new RowStyle(SizeType.Absolute, 62));
+        layout.RowStyles.Add(new RowStyle(SizeType.Absolute, 54));
         layout.RowStyles.Add(new RowStyle(SizeType.Absolute, 42));
-        layout.RowStyles.Add(new RowStyle(SizeType.Absolute, 36));
-        layout.RowStyles.Add(new RowStyle(SizeType.Absolute, 40));
+        layout.RowStyles.Add(new RowStyle(SizeType.Absolute, 46));
         layout.Controls.Add(new Label
         {
-            Text = $"将删除本地 Windows 用户“{windowsUser}”，并保留配置删除操作。\r\n配置：{profileName}",
+            Text = $"将删除本地 Windows 用户“{windowsUser}”及其用户配置目录。\r\n配置名称：{profileName}",
+            AutoSize = false,
             Dock = DockStyle.Fill,
             TextAlign = ContentAlignment.MiddleLeft
         }, 0, 0);
         layout.Controls.Add(new Label
         {
-            Text = "删除账号会移除该用户的登录能力；用户目录和文件不会由本工具自动清理。",
+            Text = "删除账号会移除登录能力和该用户目录中的配置文件；此操作不可恢复。",
+            AutoSize = false,
             Dock = DockStyle.Fill,
             ForeColor = Color.Firebrick,
             TextAlign = ContentAlignment.MiddleLeft
@@ -52,12 +56,19 @@ public sealed class AccountDeletionConfirmationForm : Form
         _countdownLabel.TextAlign = ContentAlignment.MiddleCenter;
         layout.Controls.Add(_countdownLabel, 0, 2);
 
-        var buttons = new FlowLayoutPanel { Dock = DockStyle.Fill, FlowDirection = FlowDirection.RightToLeft };
+        var buttons = new FlowLayoutPanel
+        {
+            Dock = DockStyle.Fill,
+            FlowDirection = FlowDirection.RightToLeft,
+            WrapContents = false,
+            Padding = new Padding(0, 4, 0, 0)
+        };
         _confirmButton.Text = "确认删除账号";
         _confirmButton.DialogResult = DialogResult.OK;
         _confirmButton.Enabled = false;
-        _confirmButton.Width = 110;
-        var cancelButton = new Button { Text = "取消", DialogResult = DialogResult.Cancel, Width = 80 };
+        _confirmButton.Width = 125;
+        _confirmButton.Height = 32;
+        var cancelButton = new Button { Text = "取消", DialogResult = DialogResult.Cancel, Width = 90, Height = 32 };
         buttons.Controls.Add(_confirmButton);
         buttons.Controls.Add(cancelButton);
         layout.Controls.Add(buttons, 0, 3);

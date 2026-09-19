@@ -149,7 +149,7 @@ public sealed class MainForm : Form
         initializeButton.Click += (_, _) => InitializeWindowsAccount();
         editor.Controls.Add(initializeButton, 1, 2);
         var deleteAccountButton = new Button { Text = "删除 Windows 账号", Dock = DockStyle.Fill, Font = new Font(SystemFonts.DefaultFont.FontFamily, 10F) };
-        _toolTip.SetToolTip(deleteAccountButton, "仅删除当前 Windows 账号，不删除左侧配置；必须等待十秒确认并通过 UAC。");
+        _toolTip.SetToolTip(deleteAccountButton, "删除当前 Windows 账号及其用户目录，不删除左侧配置；必须等待十秒确认并通过 UAC。");
         deleteAccountButton.Click += (_, _) => DeleteWindowsAccount();
         editor.Controls.Add(deleteAccountButton, 2, 2);
 
@@ -158,7 +158,8 @@ public sealed class MainForm : Form
         AddEditorRow(editor, 5, "程序路径", _pathTextBox, CreateBrowseButton(_pathTextBox, false));
         AddEditorRow(editor, 6, "工作目录", _workingDirectoryTextBox, CreateBrowseButton(_workingDirectoryTextBox, true));
         AddEditorRow(editor, 7, "参数列表", _argumentsTextBox);
-        _toolTip.SetToolTip(_pathTextBox, "要以所选 Windows 用户启动的 EXE 完整路径。");
+        _toolTip.SetToolTip(_pathTextBox, "要以所选 Windows 用户启动的 EXE 完整路径；选择或修改后会自动更新工作目录。");
+        _pathTextBox.Leave += (_, _) => UpdateWorkingDirectoryFromExecutable(_pathTextBox.Text);
         _toolTip.SetToolTip(_workingDirectoryTextBox, "目标程序工作目录；留空时使用 EXE 所在目录。");
         _toolTip.SetToolTip(_argumentsTextBox, "启动参数，默认是 --setregion=US 和 --setlanguage=enCN；可按空格修改。");
         _argumentsTextBox.Multiline = true;
@@ -241,11 +242,38 @@ public sealed class MainForm : Form
                 if (dialog.ShowDialog() == DialogResult.OK)
                 {
                     target.Text = dialog.FileName;
+                    UpdateWorkingDirectoryFromExecutable(dialog.FileName);
                 }
             }
         };
         return button;
     }
+
+    /// <summary>
+    /// 根据可执行文件路径自动更新工作目录为其所在目录。
+    /// </summary>
+    /// <param name="executablePath">可执行文件路径。</param>
+    private void UpdateWorkingDirectoryFromExecutable(string executablePath)
+    {
+        if (_loadingProfile || string.IsNullOrWhiteSpace(executablePath))
+        {
+            return;
+        }
+
+        try
+        {
+            var directory = Path.GetDirectoryName(Path.GetFullPath(executablePath.Trim()));
+            if (!string.IsNullOrWhiteSpace(directory))
+            {
+                _workingDirectoryTextBox.Text = directory.Replace('\\', '/');
+            }
+        }
+        catch (Exception exception) when (exception is ArgumentException or NotSupportedException or PathTooLongException)
+        {
+            // 用户仍在编辑路径时保留当前工作目录，保存时由配置校验报告路径问题。
+        }
+    }
+
 
     /// <summary>
     /// 刷新左侧 profile 列表。
@@ -337,7 +365,7 @@ public sealed class MainForm : Form
         }
 
         var choice = MessageBox.Show(
-            $"删除配置 '{name}'？\r\n\r\n选择“是”同时删除 Windows 用户 {profile.WindowsUser}；选择“否”只删除配置。",
+            $"删除配置 '{name}'？\r\n\r\n选择“是”同时删除 Windows 用户 {profile.WindowsUser} 及其用户目录；选择“否”只删除配置。",
             "删除配置",
             MessageBoxButtons.YesNoCancel,
             MessageBoxIcon.Warning);
@@ -628,7 +656,7 @@ public sealed class MainForm : Form
 
         var exitCode = Elevation.RelaunchAsAdministrator(["account", "delete", name]);
         SetStatus(exitCode == 0
-            ? $"Windows 用户 {profile.WindowsUser} 已删除，配置仍保留。"
+            ? $"Windows 用户 {profile.WindowsUser} 及其用户目录已删除，配置仍保留。"
             : $"Windows 用户删除失败，退出码：{exitCode}。配置仍保留。");
     }
 

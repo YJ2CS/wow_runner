@@ -26,4 +26,4 @@
 
 ## Windows 账号删除
 
-删除 Profile 对应的本机 Windows 登录账号。删除账号默认保留用户目录和文件；删除 Profile 与删除 Windows 账号是两个可分别确认的动作。
+删除 Profile 对应的本机 Windows 登录账号及其用户配置目录。删除账号默认保留 Profile 配置；删除 Profile 与删除 Windows 账号是两个可分别确认的动作。

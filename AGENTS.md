@@ -43,7 +43,7 @@ Each `Profiles` item maps one profile name to one Windows identity and one launc
 ```
 
 - `WindowsUser` 在配置器中只输入裸用户名，例如 `wow1`、`wow-alt` 或 `wow_test`；仅允许以英文字母开头，后接英文字母、数字、连字符或下划线。保存时底层统一规范化为 `.\wow1`。
-- `Arguments` 是 token 列表，不是 shell command string。
+- 选择或离开程序路径输入框后，配置器自动把工作目录更新为可执行文件所在目录；用户仍可手动修改工作目录。
 - Relative executable and working-directory paths resolve from the directory containing `WowRunner.exe`.
 - Profile names must be unique and valid Windows file names because they are used in Credential Manager targets and shortcut names.
 - The configuration must retain at least one profile.
@@ -54,7 +54,7 @@ Each `Profiles` item maps one profile name to one Windows identity and one launc
 - Credential target names are `WowRunner/<profile-name>` in the current Windows user's Credential Manager.
 - `credential set <name>` updates a profile password without modifying JSON.
 - `credential clear <name>` 也接受已从配置中删除的旧名称，用于清理遗留凭据。
-- 删除 profile 时，界面会询问是否同时删除本地 Windows 用户；只删除配置立即执行，同时删除账号必须完成十秒倒计时确认并通过 UAC。
+- 删除 profile 时，界面会询问是否同时删除本地 Windows 用户及其用户目录；只删除配置立即执行，同时删除账号必须完成十秒倒计时确认并通过 UAC。
 - A UAC elevation using a different administrator identity cannot read the original user's Credential Manager entry. In that case `account init <name>` opens `PasswordPromptForm` in the elevated process and receives the password interactively.
 - `WindowsAccountInitializer` creates a local account only. Do not extend it to domain accounts without a separate identity/permission design.
 - Never add password values to configuration, command-line arguments, shortcut arguments, logs, exception text, or source control.
